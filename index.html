@@ -453,6 +453,7 @@
                 <li><a href="#skills">Skills</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#nba-analysis">NBA Analysis</a></li>
+                <li><a href="#cosmic-watch">Cosmic Watch</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </div>
@@ -615,6 +616,18 @@
                     </p>
                     <div class="project-tech">
                         <span>Python</span><span>Pandas</span><span>Scikit-learn</span><span>Ridge Regression</span>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in">
+                    <div class="project-icon">🔭</div>
+                    <h3 class="project-name">Cosmic Watch</h3>
+                    <p class="project-desc">
+                        MIT Gunther Roland — data visualization &amp; analysis of
+                        atmospheric muon detection using the Cosmic Watch detector.
+                    </p>
+                    <div class="project-tech">
+                        <span>Python</span><span>Data Viz</span><span>Muon Physics</span><span>Excel</span>
                     </div>
                 </div>
 
@@ -892,6 +905,197 @@
                     fuses SPM priors with RAPM evidence, we can answer — with quantifiable uncertainty —
                     the question that every NBA front office asks: <em>"How many wins does this player add?"</em>
                 </p>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             COSMIC WATCH DEEP DIVE
+             ============================================================ -->
+        <section id="cosmic-watch">
+            <p class="section-label">Deep Dive</p>
+            <h2 class="section-title">Cosmic Watch: Muon Detection &amp; Atmospheric Analysis</h2>
+
+            <p style="color:var(--muted);font-size:1.05rem;line-height:1.8;margin-bottom:32px;">
+                Under the guidance of <strong style="color:var(--text);">MIT Professor Gunther Roland</strong>,
+                this project uses the <strong style="color:var(--text);">Cosmic Watch</strong> detector to study how
+                atmospheric pressure affects muon detection rates and to improve the timing calibration
+                of rare coincidence events — bridging particle physics with hands-on data science.
+            </p>
+
+            <!-- 1. Motivation -->
+            <div class="glass-card fade-in" style="margin-bottom:20px;">
+                <h3 style="font-size:1.15rem;margin-bottom:14px;color:var(--accent3);">
+                    1. Motivation: Why This Matters
+                </h3>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                    <div>
+                        <p style="color:var(--muted);font-size:0.9rem;line-height:1.7;">
+                            <strong style="color:var(--text);">Cosmic muons</strong> are elementary particles
+                            produced when high-energy cosmic rays collide with Earth's upper atmosphere.
+                            They rain down constantly — roughly one per square centimeter per minute at sea level.
+                            Because they penetrate matter deeply, detecting them reveals information about
+                            both the cosmos and our atmosphere.
+                        </p>
+                    </div>
+                    <div>
+                        <p style="color:var(--muted);font-size:0.9rem;line-height:1.7;">
+                            <strong style="color:var(--text);">The core question:</strong> atmospheric pressure
+                            acts like a shield — higher pressure means more air for muons to travel through,
+                            increasing the chance they decay before reaching our detector. By quantifying this
+                            relationship, we can correct for weather effects and <strong style="color:var(--accent3);">sharpen our ability
+                            to detect rare cosmic events</strong> like high-energy particle bursts.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. What I Did -->
+            <div class="glass-card fade-in" style="margin-bottom:20px;">
+                <h3 style="font-size:1.15rem;margin-bottom:14px;color:var(--accent3);">
+                    2. What I Did: Data Visualization &amp; Analysis
+                </h3>
+
+                <p style="color:var(--accent4);font-size:0.85rem;font-weight:700;letter-spacing:2px;margin-bottom:10px;">
+                    TASK 1 — ATMOSPHERIC PRESSURE VS. TIME-STAMP
+                </p>
+                <div style="color:var(--muted);font-size:0.9rem;line-height:1.7;margin-bottom:20px;padding-left:16px;border-left:2px solid var(--accent4);">
+                    <p>
+                        Used <strong style="color:var(--text);">Python (Matplotlib + Pandas)</strong> to generate
+                        atmospheric-pressure-over-time plots for each data group. Each group contained tens of
+                        thousands of timestamped pressure readings from the Cosmic Watch detector.
+                    </p>
+                    <br>
+                    <p>
+                        After generating the images, I <strong style="color:var(--text);">manually classified</strong>
+                        each plot — identifying patterns like sensor drift, diurnal pressure cycles, and anomalous
+                        spikes. This manual step was essential: it built an intuition for what "normal" detector
+                        behavior looks like, making it far easier to spot genuinely interesting physics events later.
+                    </p>
+                </div>
+
+                <p style="color:var(--accent1);font-size:0.85rem;font-weight:700;letter-spacing:2px;margin-bottom:10px;">
+                    TASK 2 — DIURNAL PRESSURE VISUALIZATION
+                </p>
+                <div style="color:var(--muted);font-size:0.9rem;line-height:1.7;margin-bottom:20px;padding-left:16px;border-left:2px solid var(--accent1);">
+                    <p>
+                        Built a <strong style="color:var(--text);">24-hour heatmap visualization</strong> in Python
+                        showing how atmospheric pressure varies across each hour of the day, across multiple weeks
+                        of data. The goal: identify whether daily pressure cycles — warmer air expanding during the day,
+                        cooler denser air at night — systematically affected muon counts.
+                    </p>
+                    <br>
+                    <p>
+                        This revealed a clear <strong style="color:var(--accent3);">diurnal pattern</strong>: muon
+                        detection rates were consistently lower during midday hours when atmospheric expansion reduced
+                        air density, and higher during the cooler nighttime hours. Quantifying this cycle meant we
+                        could subtract it out and isolate pressure-driven effects from temperature-driven ones.
+                    </p>
+                </div>
+
+                <p style="color:var(--accent2);font-size:0.85rem;font-weight:700;letter-spacing:2px;margin-bottom:10px;">
+                    TASK 3 — COINCIDENT EVENT RATE CALCULATION
+                </p>
+                <div style="color:var(--muted);font-size:0.9rem;line-height:1.7;margin-bottom:20px;padding-left:16px;border-left:2px solid var(--accent2);">
+                    <p>
+                        Cosmic Watch uses two scintillator panels — a true muon event is recorded only when
+                        <strong style="color:var(--text);">both panels trigger within a narrow time window</strong>.
+                        In Excel, I calculated the coincident event rate: counting how many paired triggers
+                        occurred per unit time, and computing the false-coincidence background rate from
+                        uncorrelated single-panel hits.
+                    </p>
+                    <br>
+                    <p>
+                        This directly fed into the <strong style="color:var(--text);">time-difference calibration</strong> —
+                        by analyzing the distribution of time differences between the two panels, I identified
+                        a systematic offset that, once corrected, improved our sensitivity to rare coincidence events.
+                    </p>
+                </div>
+
+                <p style="color:var(--accent4);font-size:0.85rem;font-weight:700;letter-spacing:2px;margin-bottom:10px;">
+                    TASK 4 — TEAM SYNTHESIS &amp; FINAL FIGURES
+                </p>
+                <div style="color:var(--muted);font-size:0.9rem;line-height:1.7;margin-bottom:20px;padding-left:16px;border-left:2px solid var(--accent4);">
+                    <p>
+                        Consolidated all key visualizations generated by the team — pressure trends,
+                        diurnal heatmaps, coincidence timing distributions, and muon-rate vs. pressure
+                        scatter plots — into a unified presentation. I ensured each figure was
+                        <strong style="color:var(--text);">properly labeled, consistently styled,</strong>
+                        and accompanied by explanatory captions so the entire analysis pipeline
+                        was reproducible and clear to any viewer.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 3. Results -->
+            <div class="glass-card fade-in" style="margin-bottom:20px;">
+                <h3 style="font-size:1.15rem;margin-bottom:14px;color:var(--accent3);">
+                    3. Results &amp; Key Findings
+                </h3>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                    <div style="background:var(--glass);border-radius:12px;padding:24px;">
+                        <div style="font-size:2rem;margin-bottom:8px;">📉</div>
+                        <strong style="color:var(--text);display:block;margin-bottom:6px;font-size:1rem;">
+                            Pressure vs. Muon Rate (Anti-Correlation)
+                        </strong>
+                        <p style="color:var(--muted);font-size:0.88rem;line-height:1.65;">
+                            As atmospheric pressure increases, muon detection rate decreases. Higher
+                            pressure = denser air = more muons decay before reaching ground level.
+                            This confirms the theoretical expectation and allows us to
+                            <strong style="color:var(--accent3);">correct for weather artifacts</strong>
+                            in real-time cosmic event monitoring.
+                        </p>
+                    </div>
+                    <div style="background:var(--glass);border-radius:12px;padding:24px;">
+                        <div style="font-size:2rem;margin-bottom:8px;">⏱️</div>
+                        <strong style="color:var(--text);display:block;margin-bottom:6px;font-size:1rem;">
+                            Improved Timing Calibration
+                        </strong>
+                        <p style="color:var(--muted);font-size:0.88rem;line-height:1.65;">
+                            The refined time-difference calibration eliminates a systematic offset in
+                            coincidence detection. This directly <strong style="color:var(--accent3);">enhances
+                            sensitivity to rare cosmic phenomena</strong> — including high-energy particle
+                            bursts and potentially exotics beyond the Standard Model.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Challenges -->
+            <div class="glass-card fade-in" style="margin-bottom:20px;">
+                <h3 style="font-size:1.15rem;margin-bottom:14px;color:var(--accent3);">
+                    4. Challenges &amp; What I Learned
+                </h3>
+                <div style="color:var(--muted);font-size:0.9rem;line-height:1.7;padding-left:16px;border-left:2px solid var(--accent1);">
+                    <p>
+                        <strong style="color:var(--text);">⚡ The noise problem.</strong>
+                        Raw detector data is noisy — electrical interference, temperature drift,
+                        and random coincidences all masquerade as real muon events. Distinguishing
+                        signal from noise required iterative filtering: first a simple threshold cut,
+                        then a statistical significance test on coincidence timing. This taught me
+                        that <strong style="color:var(--accent3);">data cleaning is not a one-pass
+                        operation</strong> — it's a loop of hypothesis, filter, visualize, and refine.
+                    </p>
+                    <br>
+                    <p>
+                        <strong style="color:var(--text);">🔄 Manual classification as a forcing function.</strong>
+                        Having to manually classify hundreds of pressure-time plots felt tedious at
+                        first, but it forced me to truly understand the data's texture — sensor drift
+                        patterns, the shape of diurnal cycles, the subtle difference between a real
+                        pressure anomaly and a loose cable. This deep familiarity later made automated
+                        classification <em>possible</em> because I knew exactly what features to look for.
+                    </p>
+                    <br>
+                    <p>
+                        <strong style="color:var(--text);">🔗 Connecting to NBA Analysis.</strong>
+                        This experience crystallized a connection to my NBA work: both projects are
+                        fundamentally about <strong style="color:var(--accent3);">separating signal from noise</strong>.
+                        In Cosmic Watch, atmospheric pressure is the confounder — just like teammate quality
+                        confounds raw plus-minus in basketball. The ridge regression that stabilizes RAPM
+                        is conceptually identical to the regularization we apply to time-difference
+                        distributions. Different domains, same underlying logic: <em>control for what you
+                        can measure, regularize against what you cannot.</em>
+                    </p>
+                </div>
             </div>
         </section>
 
