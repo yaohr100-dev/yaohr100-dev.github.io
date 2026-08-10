@@ -1265,8 +1265,8 @@
                 const y = e.clientY - rect.top;
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
-                const rotateX = ((y - centerY) / centerY) * -8;
-                const rotateY = ((x - centerX) / centerX) * 8;
+                const rotateX = ((y - centerY) / centerY) * -3;
+                const rotateY = ((x - centerX) / centerX) * 3;
                 card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
             });
             card.addEventListener('mouseleave', () => {
@@ -1306,20 +1306,30 @@
         });
 
         // ================================================================
-        // KONAMI CODE EASTER EGG
+        // KONAMI CODE EASTER EGG (lenient timing window)
         // ================================================================
         const KONAMI = [38,38,40,40,37,39,37,39,66,65];
         let konamiIdx = 0;
+        let konamiTimer = null;
         document.addEventListener('keydown', (e) => {
-            if (e.keyCode === KONAMI[konamiIdx]) {
-                konamiIdx++;
-                if (konamiIdx === KONAMI.length) {
-                    konamiIdx = 0;
-                    document.body.style.transition = 'filter 0.8s';
-                    document.body.style.filter = 'hue-rotate(180deg) saturate(2)';
-                    setTimeout(() => { document.body.style.filter = ''; }, 2000);
-                }
-            } else { konamiIdx = 0; }
+            // Reset if a wrong key is pressed
+            if (e.keyCode !== KONAMI[konamiIdx]) {
+                konamiIdx = 0;
+                if (konamiTimer) clearTimeout(konamiTimer);
+                return;
+            }
+            // Allow the correct key even if not consecutive — just keep progressing
+            konamiIdx++;
+            if (konamiTimer) clearTimeout(konamiTimer);
+            // Reset after 2.5s of inactivity
+            konamiTimer = setTimeout(() => { konamiIdx = 0; }, 2500);
+            if (konamiIdx === KONAMI.length) {
+                konamiIdx = 0;
+                if (konamiTimer) clearTimeout(konamiTimer);
+                document.body.style.transition = 'filter 0.8s';
+                document.body.style.filter = 'hue-rotate(180deg) saturate(2)';
+                setTimeout(() => { document.body.style.filter = ''; }, 2000);
+            }
         });
 
         // ================================================================
