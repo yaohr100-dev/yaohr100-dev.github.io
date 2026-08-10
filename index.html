@@ -1264,6 +1264,133 @@
             hero.style.transform = `translateY(${scrolled * 0.4}px)`;
             hero.style.opacity = Math.max(0, 1 - scrolled / 700);
         }, { passive: true });
+
+        // ================================================================
+        // TILT EFFECT ON CARDS
+        // ================================================================
+        document.querySelectorAll('.project-card, .glass-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -8;
+                const rotateY = ((x - centerX) / centerX) * 8;
+                card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+
+        // ================================================================
+        // PARTICLE EXPLOSION ON CLICK
+        // ================================================================
+        document.addEventListener('click', (e) => {
+            const count = 12;
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                const angle = (i / count) * Math.PI * 2;
+                const distance = 30 + Math.random() * 50;
+                const size = 3 + Math.random() * 5;
+                const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+
+                particle.style.cssText = `
+                    position:fixed; pointer-events:none; z-index:9999;
+                    left:${e.clientX}px; top:${e.clientY}px;
+                    width:${size}px; height:${size}px;
+                    border-radius:50%; background:${color};
+                    transition: all 0.7s cubic-bezier(0,0.85,0.25,1);
+                    opacity:1;
+                `;
+                document.body.appendChild(particle);
+
+                requestAnimationFrame(() => {
+                    particle.style.transform = `translate(${Math.cos(angle)*distance}px, ${Math.sin(angle)*distance}px) scale(0)`;
+                    particle.style.opacity = '0';
+                });
+
+                setTimeout(() => particle.remove(), 800);
+            }
+        });
+
+        // ================================================================
+        // KONAMI CODE EASTER EGG
+        // ================================================================
+        const KONAMI = [38,38,40,40,37,39,37,39,66,65];
+        let konamiIdx = 0;
+        document.addEventListener('keydown', (e) => {
+            if (e.keyCode === KONAMI[konamiIdx]) {
+                konamiIdx++;
+                if (konamiIdx === KONAMI.length) {
+                    konamiIdx = 0;
+                    document.body.style.transition = 'filter 0.8s';
+                    document.body.style.filter = 'hue-rotate(180deg) saturate(2)';
+                    setTimeout(() => { document.body.style.filter = ''; }, 2000);
+                }
+            } else { konamiIdx = 0; }
+        });
+
+        // ================================================================
+        // TYPING EFFECT ON SECTION LABELS WHEN SCROLLED INTO VIEW
+        // ================================================================
+        const labelObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const label = entry.target;
+                    const text = label.textContent;
+                    label.textContent = '';
+                    label.style.borderRight = '2px solid var(--accent3)';
+                    let i = 0;
+                    const type = () => {
+                        if (i < text.length) {
+                            label.textContent += text.charAt(i);
+                            i++;
+                            setTimeout(type, 40 + Math.random() * 30);
+                        } else {
+                            label.style.borderRight = 'none';
+                        }
+                    };
+                    type();
+                    labelObserver.unobserve(label);
+                }
+            });
+        }, { threshold: 0.8 });
+        document.querySelectorAll('.section-label').forEach(el => labelObserver.observe(el));
+
+        // ================================================================
+        // GLOW FOLLOWS MOUSE ON HERO
+        // ================================================================
+        const hero = document.querySelector('.hero');
+        if (hero) {
+            hero.addEventListener('mousemove', (e) => {
+                const rect = hero.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                hero.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(196,77,255,0.08) 0%, transparent 50%)`;
+            });
+            hero.addEventListener('mouseleave', () => {
+                hero.style.background = '';
+            });
+        }
+
+        // ================================================================
+        // RANDOM SKILL-TAG GLITCH
+        // ================================================================
+        setInterval(() => {
+            const tags = document.querySelectorAll('.skill-tag');
+            const tag = tags[Math.floor(Math.random() * tags.length)];
+            if (!tag) return;
+            tag.style.transition = 'none';
+            tag.style.transform = `translate(${(Math.random()-0.5)*6}px, ${(Math.random()-0.5)*6}px)`;
+            tag.style.boxShadow = `0 0 20px ${COLORS[Math.floor(Math.random()*COLORS.length)]}`;
+            setTimeout(() => {
+                tag.style.transition = 'all 0.5s ease';
+                tag.style.transform = '';
+                tag.style.boxShadow = '';
+            }, 150);
+        }, 3500);
     </script>
 
 </body>
