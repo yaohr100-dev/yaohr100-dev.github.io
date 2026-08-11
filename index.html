@@ -46,6 +46,15 @@
             outline-offset: 2px;
         }
 
+        /* ===== External link indicator ===== */
+        a[target="_blank"]::after {
+            content: " ↗";
+            font-size: 0.7em;
+            opacity: 0.55;
+        }
+        .contact-card[target="_blank"]::after,
+        .project-tags a[target="_blank"]::after { content: none; }
+
         /* ================================================================
            LAYOUT
            ================================================================ */
