@@ -1254,6 +1254,13 @@
         // ================================================================
         document.querySelectorAll('.project-card, .glass-card').forEach(card => {
             card.addEventListener('mousemove', (e) => {
+                // skip tilt on touch devices or when the target is an anchor tag
+                if (e.pointerType === 'touch') return;
+                const target = e.target;
+                if (target.closest('a')) {
+                    card.style.transform = '';
+                    return;
+                }
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
