@@ -41,6 +41,13 @@
         .no-underline { text-decoration: none; }
         .no-underline:hover { text-decoration: none; }
 
+        /* External link indicator */
+        a[target="_blank"]:not(.contact-card):not(.hero-links a)::after {
+            content: " ↗";
+            font-size: 0.7em;
+            opacity: 0.55;
+        }
+
         /* ================================================================
            LAYOUT
            ================================================================ */
