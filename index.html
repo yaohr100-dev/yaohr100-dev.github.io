@@ -1405,6 +1405,7 @@
             let dx = 1, dy = 0;
             let score = 0;
             let interval;
+            let inputQueue = []; // queue direction changes to avoid lost inputs
 
             function placeFood() {
                 food = {
@@ -1453,6 +1454,14 @@
             }
 
             function step() {
+                // process one queued direction per step
+                if (inputQueue.length > 0) {
+                    const next = inputQueue.shift();
+                    // prevent 180° reversal
+                    if (!(next.dx === -dx && next.dy === -dy) || snake.length === 1) {
+                        dx = next.dx; dy = next.dy;
+                    }
+                }
                 const head = {x: snake[0].x + dx, y: snake[0].y + dy};
 
                 // wall collision → wrap
@@ -1497,10 +1506,10 @@
                     document.removeEventListener('keydown', keyHandler);
                     return;
                 }
-                if ((e.key === 'ArrowUp' || e.key === 'w') && dy !== 1) { dx = 0; dy = -1; e.preventDefault(); }
-                if ((e.key === 'ArrowDown' || e.key === 's') && dy !== -1) { dx = 0; dy = 1; e.preventDefault(); }
-                if ((e.key === 'ArrowLeft' || e.key === 'a') && dx !== 1) { dx = -1; dy = 0; e.preventDefault(); }
-                if ((e.key === 'ArrowRight' || e.key === 'd') && dx !== -1) { dx = 1; dy = 0; e.preventDefault(); }
+                if ((e.key === 'ArrowUp' || e.key === 'w') && dy !== 1) { inputQueue.push({dx:0, dy:-1}); e.preventDefault(); }
+                if ((e.key === 'ArrowDown' || e.key === 's') && dy !== -1) { inputQueue.push({dx:0, dy:1}); e.preventDefault(); }
+                if ((e.key === 'ArrowLeft' || e.key === 'a') && dx !== 1) { inputQueue.push({dx:-1, dy:0}); e.preventDefault(); }
+                if ((e.key === 'ArrowRight' || e.key === 'd') && dx !== -1) { inputQueue.push({dx:1, dy:0}); e.preventDefault(); }
             }
 
             document.addEventListener('keydown', keyHandler);
