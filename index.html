@@ -14,8 +14,8 @@
             --bg:        #faf9f7;
             --surface:   #ffffff;
             --text:      #1a1a1a;
-            --muted:     #5e5e5e;
-            --faint:     #999;
+            --muted:     #555;
+            --faint:     #888;
             --border:    #e5e3df;
             --accent:    #2563eb;
             --accent-h:  #1d4ed8;
@@ -34,6 +34,12 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
         }
+
+        /* ===== Better link discoverability ===== */
+        a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+        a:hover { color: var(--accent-h); }
+        .no-underline { text-decoration: none; }
+        .no-underline:hover { text-decoration: none; }
 
         /* ================================================================
            LAYOUT
@@ -62,13 +68,16 @@
             font-size: 1.1rem; font-weight: 700; color: var(--text);
             text-decoration: none; letter-spacing: -0.02em;
         }
+        .nav-logo:hover { color: var(--accent); }
         .nav-links { display: flex; gap: 24px; list-style: none; }
         .nav-links a {
             color: var(--muted); text-decoration: none;
             font-size: 0.875rem; font-weight: 500;
             transition: color 0.2s;
+            padding-bottom: 2px;
+            border-bottom: 2px solid transparent;
         }
-        .nav-links a:hover { color: var(--accent); }
+        .nav-links a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
         /* ================================================================
            HERO
@@ -112,8 +121,8 @@
             color: var(--text);
         }
         .section-title small {
-            display: block; font-size: 0.75rem; font-weight: 500;
-            color: var(--faint); text-transform: uppercase;
+            display: block; font-size: 0.72rem; font-weight: 600;
+            color: var(--accent); text-transform: uppercase;
             letter-spacing: 0.06em; margin-bottom: 6px;
         }
 
@@ -131,12 +140,12 @@
 
         .info-card {
             background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 20px 22px;
+            border-radius: var(--radius); padding: 16px 20px;
             box-shadow: var(--shadow);
         }
         .info-row {
             display: flex; align-items: flex-start; gap: 12px;
-            padding: 8px 0;
+            padding: 9px 0;
         }
         .info-row + .info-row { border-top: 1px solid var(--border); }
         .info-icon { font-size: 1.25rem; width: 32px; text-align: center; flex-shrink: 0; }
@@ -161,7 +170,7 @@
             border: 1px solid var(--border);
             transition: border-color 0.2s;
         }
-        .skill-tag:hover { border-color: var(--accent); }
+        .skill-tag:hover { border-color: var(--accent); background: #f8faff; }
 
         /* ================================================================
            PROJECTS
@@ -179,7 +188,7 @@
         }
         .project-card:hover {
             border-color: var(--accent);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .project-name {
             font-weight: 700; font-size: 0.95rem;
@@ -201,20 +210,24 @@
         .disclosure-btn {
             width: 100%; text-align: left;
             background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 18px 20px;
+            border-radius: var(--radius); padding: 16px 18px;
             font-size: 0.95rem; font-weight: 600; color: var(--text);
             cursor: pointer; display: flex; align-items: center;
             justify-content: space-between; gap: 12px;
             box-shadow: var(--shadow);
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, background 0.2s;
             font-family: inherit;
         }
-        .disclosure-btn:hover { border-color: var(--accent); }
-        .disclosure-btn .arrow {
-            transition: transform 0.25s; font-size: 0.75rem;
-            color: var(--faint); flex-shrink: 0;
+        .disclosure-btn:hover { border-color: var(--accent); background: #f8faff; }
+        .disclosure-btn:focus-visible {
+            outline: 2px solid var(--accent); outline-offset: 2px;
         }
-        .disclosure.open .disclosure-btn .arrow { transform: rotate(180deg); }
+        .disclosure-btn .arrow {
+            transition: transform 0.25s; font-size: 0.7rem;
+            color: var(--faint); flex-shrink: 0;
+            opacity: 0.5;
+        }
+        .disclosure.open .disclosure-btn .arrow { transform: rotate(180deg); opacity: 1; }
         .disclosure-body {
             display: none;
             background: var(--surface); border: 1px solid var(--border);
@@ -222,7 +235,11 @@
             padding: 0 20px 24px;
         }
         .disclosure.open .disclosure-body { display: block; }
-        .disclosure.open .disclosure-btn { border-radius: var(--radius) var(--radius) 0 0; border-bottom-color: transparent; }
+        .disclosure.open .disclosure-btn {
+            border-radius: var(--radius) var(--radius) 0 0;
+            border-bottom-color: transparent;
+            background: #f8faff;
+        }
 
         .disclosure-body h4 {
             font-size: 0.9rem; font-weight: 700; color: var(--text);
@@ -295,11 +312,14 @@
             box-shadow: var(--shadow);
             text-decoration: none; color: var(--text);
             display: flex; align-items: center; gap: 12px;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .contact-card:hover { border-color: var(--accent); }
+        .contact-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
         .contact-card .c-icon { font-size: 1.25rem; }
-        .contact-card strong { display: block; font-size: 0.88rem; }
+        .contact-card strong { display: block; font-size: 0.88rem; color: var(--text); }
         .contact-card span  { color: var(--muted); font-size: 0.8rem; }
 
         /* ================================================================
@@ -311,7 +331,7 @@
             color: var(--faint); font-size: 0.82rem;
             margin-top: 20px;
         }
-        footer .hint { font-size: 0.72rem; color: var(--border); margin-top: 6px; }
+        footer .hint { font-size: 0.72rem; color: var(--faint); margin-top: 6px; }
 
         /* ================================================================
            RESPONSIVE
@@ -334,6 +354,12 @@
             background: #f0f0ed; padding: 1px 6px;
             border-radius: 3px; font-size: 0.87em;
             font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+            color: var(--text);
+        }
+        /* ===== Focus ring for keyboard nav ===== */
+        :focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
         }
     </style>
 </head>
