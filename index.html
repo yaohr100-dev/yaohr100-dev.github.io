@@ -1407,6 +1407,7 @@
             let pendingDx = 1, pendingDy = 0;
             let score = 0;
             let interval;
+            let animationId = null;
             let lastStepTime = 0;
             const STEP_MS = 100;
 
@@ -1481,7 +1482,6 @@
                     // self collision
                     for (const s of snake) {
                         if (s.x === head.x && s.y === head.y) {
-                            clearInterval(animationId);
                             // game over overlay
                             ctx.fillStyle = 'rgba(255,107,157,0.5)';
                             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1525,18 +1525,19 @@
 
             function cleanup() {
                 snakeActive = false;
-                cancelAnimationFrame(animationId);
+                if (animationId) cancelAnimationFrame(animationId);
                 document.removeEventListener('keydown', keyHandler);
-                const dismiss = () => { canvas.remove(); };
-                canvas.addEventListener('click', dismiss, {once: true});
-                // auto-dismiss on Esc too when game over
-                const escDismiss = (e) => { if (e.key === 'Escape') { dismiss(); document.removeEventListener('keydown', escDismiss); } };
-                document.addEventListener('keydown', escDismiss);
+                // only dismiss on click if game over (not on escape)
+                canvas.addEventListener('click', () => { canvas.remove(); }, {once: true});
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') { canvas.remove(); }
+                }, {once: true});
             }
 
             let animationId;
             document.addEventListener('keydown', keyHandler);
             draw();
+            lastStepTime = performance.now();
             animationId = requestAnimationFrame(gameLoop);
         }
 
