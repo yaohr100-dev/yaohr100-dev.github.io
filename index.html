@@ -1369,6 +1369,199 @@
         }
 
         // ================================================================
+        // SNAKE GAME — type "snake" to start
+        // ================================================================
+        let snakeBuffer = '';
+        let snakeActive = false;
+        const SNAKE_WORD = 'snake';
+
+        document.addEventListener('keydown', (e) => {
+            if (snakeActive) return;
+            if (e.key.length === 1 && e.key.match(/[a-z]/i)) {
+                snakeBuffer += e.key.toLowerCase();
+                if (snakeBuffer.length > SNAKE_WORD.length + 5) {
+                    snakeBuffer = snakeBuffer.slice(-SNAKE_WORD.length);
+                }
+                if (snakeBuffer.includes(SNAKE_WORD)) {
+                    snakeBuffer = '';
+                    startSnake();
+                }
+            }
+        });
+
+        function startSnake() {
+            snakeActive = true;
+            const canvas = document.createElement('canvas');
+            canvas.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10000;border:2px solid var(--accent3);border-radius:8px;background:rgba(15,14,26,0.95);cursor:crosshair;';
+            canvas.width = 400;
+            canvas.height = 400;
+            document.body.appendChild(canvas);
+            const ctx = canvas.getContext('2d');
+
+            const gridSize = 20;
+            const tileCount = canvas.width / gridSize;
+            let snake = [{x:10, y:10}];
+            let food = {x:15, y:15};
+            let dx = 1, dy = 0;
+            let score = 0;
+            let interval;
+
+            function placeFood() {
+                food = {
+                    x: Math.floor(Math.random() * tileCount),
+                    y: Math.floor(Math.random() * tileCount)
+                };
+                // avoid placing on snake
+                for (const s of snake) {
+                    if (s.x === food.x && s.y === food.y) return placeFood();
+                }
+            }
+
+            function draw() {
+                // clear
+                ctx.fillStyle = 'rgba(15,14,26,0.95)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // grid lines
+                ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+                ctx.lineWidth = 0.5;
+                for (let i = 0; i < tileCount; i++) {
+                    ctx.beginPath(); ctx.moveTo(i*gridSize, 0); ctx.lineTo(i*gridSize, canvas.height); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(0, i*gridSize); ctx.lineTo(canvas.width, i*gridSize); ctx.stroke();
+                }
+
+                // snake
+                snake.forEach((s, i) => {
+                    const t = i / snake.length;
+                    const r = Math.round(77 + t * (196 - 77));
+                    const g = Math.round(201 + t * (77 - 201));
+                    const b = Math.round(246 + t * (255 - 246));
+                    ctx.fillStyle = `rgb(${r},${g},${b})`;
+                    ctx.fillRect(s.x * gridSize + 1, s.y * gridSize + 1, gridSize - 2, gridSize - 2);
+                });
+
+                // food
+                ctx.fillStyle = '#ff6b9d';
+                ctx.beginPath();
+                ctx.arc(food.x * gridSize + gridSize/2, food.y * gridSize + gridSize/2, gridSize/2 - 2, 0, Math.PI*2);
+                ctx.fill();
+
+                // score
+                ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                ctx.font = '12px monospace';
+                ctx.fillText(`Score: ${score}  [Esc to close]`, 8, canvas.height - 8);
+            }
+
+            function step() {
+                const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+
+                // wall collision → wrap
+                if (head.x < 0) head.x = tileCount - 1;
+                if (head.x >= tileCount) head.x = 0;
+                if (head.y < 0) head.y = tileCount - 1;
+                if (head.y >= tileCount) head.y = 0;
+
+                // self collision
+                for (const s of snake) {
+                    if (s.x === head.x && s.y === head.y) {
+                        clearInterval(interval);
+                        ctx.fillStyle = 'rgba(255,107,157,0.5)';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        ctx.fillStyle = '#fff';
+                        ctx.font = 'bold 28px monospace';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(`GAME OVER — ${score}`, canvas.width/2, canvas.height/2);
+                        ctx.font = '14px monospace';
+                        ctx.fillText('Click to dismiss', canvas.width/2, canvas.height/2 + 30);
+                        canvas.addEventListener('click', () => { canvas.remove(); snakeActive = false; }, {once: true});
+                        document.removeEventListener('keydown', keyHandler);
+                        return;
+                    }
+                }
+
+                snake.unshift(head);
+                if (head.x === food.x && head.y === food.y) {
+                    score++;
+                    placeFood();
+                } else {
+                    snake.pop();
+                }
+                draw();
+            }
+
+            function keyHandler(e) {
+                if (e.key === 'Escape') {
+                    clearInterval(interval);
+                    canvas.remove();
+                    snakeActive = false;
+                    document.removeEventListener('keydown', keyHandler);
+                    return;
+                }
+                if ((e.key === 'ArrowUp' || e.key === 'w') && dy !== 1) { dx = 0; dy = -1; e.preventDefault(); }
+                if ((e.key === 'ArrowDown' || e.key === 's') && dy !== -1) { dx = 0; dy = 1; e.preventDefault(); }
+                if ((e.key === 'ArrowLeft' || e.key === 'a') && dx !== 1) { dx = -1; dy = 0; e.preventDefault(); }
+                if ((e.key === 'ArrowRight' || e.key === 'd') && dx !== -1) { dx = 1; dy = 0; e.preventDefault(); }
+            }
+
+            document.addEventListener('keydown', keyHandler);
+            draw();
+            interval = setInterval(step, 100);
+        }
+
+        // ================================================================
+        // FALLING EMOJIS — triggered by clicking the footer heart
+        // ================================================================
+        const heart = document.querySelector('footer .heart');
+        if (heart) {
+            heart.style.cursor = 'pointer';
+            heart.addEventListener('click', () => {
+                const emojis = ['🏀','🔭','🤖','🌊','🧠','📚','💻','❤️','✨','🚀','📊','💡','🎓','⭐','🔥','💜'];
+                const count = 25;
+                for (let i = 0; i < count; i++) {
+                    const emoji = document.createElement('div');
+                    const x = Math.random() * window.innerWidth;
+                    const size = 18 + Math.random() * 30;
+                    const duration = 2 + Math.random() * 3;
+                    const delay = Math.random() * 0.8;
+                    emoji.style.cssText = `
+                        position:fixed; pointer-events:none; z-index:9999;
+                        left:${x}px; top:-60px;
+                        font-size:${size}px;
+                        animation: emojiFall ${duration}s ease-in ${delay}s forwards;
+                    `;
+                    emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    document.body.appendChild(emoji);
+                    setTimeout(() => emoji.remove(), (duration + delay) * 1000 + 200);
+                }
+            });
+        }
+
+        // Add emoji fall keyframes if not already present
+        if (!document.querySelector('#emoji-fall-style')) {
+            const style = document.createElement('style');
+            style.id = 'emoji-fall-style';
+            style.textContent = `
+                @keyframes emojiFall {
+                    0%   { transform: translateY(0) rotate(0deg); opacity:1; }
+                    100% { transform: translateY(${window.innerHeight + 100}px) rotate(720deg); opacity:0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // ================================================================
+        // COUNTER — increment on each visit (localStorage)
+        // ================================================================
+        (() => {
+            const visits = parseInt(localStorage.getItem('hy_visits') || '0') + 1;
+            localStorage.setItem('hy_visits', visits);
+            const footer = document.querySelector('footer p');
+            if (footer && visits > 1) {
+                footer.insertAdjacentHTML('beforeend', `<br><span style="font-size:0.75rem;color:var(--muted);">You've visited ${visits} times</span>`);
+            }
+        })();
+
+        // ================================================================
         // RANDOM SKILL-TAG GLITCH
         // ================================================================
         setInterval(() => {
