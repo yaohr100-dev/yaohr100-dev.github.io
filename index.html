@@ -1465,7 +1465,10 @@
                 ctx.fillStyle = 'rgba(255,255,255,0.25)';
                 ctx.font = '11px monospace';
                 ctx.textAlign = 'start';
-                ctx.fillText(`Score: ${score}  [Esc] close  [↑↓←→ or WASD]`, 8, canvas.height - 8);
+                ctx.fillText(`Score: ${score}`, 8, canvas.height - 8);
+                ctx.fillStyle = 'rgba(255,255,255,0.15)';
+                ctx.font = '10px monospace';
+                ctx.fillText(`Esc=exit  Arrow/WASD=move`, 74, canvas.height - 8);
             }
 
             function gameLoop(timestamp) {
