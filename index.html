@@ -1413,11 +1413,10 @@
             let dx = 1, dy = 0;
             let pendingDx = 1, pendingDy = 0;
             let score = 0;
-            let interval;
             let animationId = null;
             let gameOver = false;
             let lastStepTime = 0;
-            const STEP_MS = 100;
+            const STEP_MS = 120;
 
             function placeFood() {
                 food = {
@@ -1527,6 +1526,7 @@
                 }
                 const key = e.key;
                 // Set pending direction — validation happens in gameLoop to prevent 180° reversal
+                const none = {dx:0, dy:0};
                 if ((key === 'ArrowUp' || key === 'w') && dy !== 1)    { pendingDx = 0;  pendingDy = -1; e.preventDefault(); }
                 if ((key === 'ArrowDown' || key === 's') && dy !== -1)  { pendingDx = 0;  pendingDy = 1;  e.preventDefault(); }
                 if ((key === 'ArrowLeft' || key === 'a') && dx !== 1)   { pendingDx = -1; pendingDy = 0;  e.preventDefault(); }
