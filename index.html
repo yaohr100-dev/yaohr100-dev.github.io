@@ -424,19 +424,17 @@
                     <p>
                         I graduated from <strong>Shenzhen Senior High School</strong> with
                         A Levels in Mathematics, Further Mathematics, Physics, Economics, and
-                        Chinese. Now I'm headed to <strong>LSE</strong> to study Data Science.
+                        Chinese. I'm starting at <strong>LSE</strong> this fall for Data Science.
                     </p>
                     <p>
-                        I'm curious about how <strong>economics, technology, and data</strong>
-                        intersect. My work spans NBA analytics, cosmic-ray physics, and machine
-                        learning — each one a different lens on the same question: how do we
-                        extract signal from noise?
+                        I like working with data — NBA stats, cosmic-ray detector readings,
+                        whatever's interesting. Most of my projects come back to the same thing:
+                        finding patterns in messy information.
                     </p>
                     <p>
-                        Outside the classroom, I've taught in Inner Mongolia, tutored through
-                        Mission For Education Equality, and posted 900+ articles about basketball
-                        analytics. I believe the best ideas come from diverse perspectives and
-                        collaborative energy.
+                        I've taught English in Inner Mongolia, tutored math online for kids
+                        in underserved neighborhoods, and written over 900 basketball analytics
+                        posts on Tencent Sports.
                     </p>
                 </div>
                 <div class="info-card">
@@ -600,9 +598,9 @@
                 </button>
                 <div class="disclosure-body">
 
-                    <p>Using five seasons of play-by-play data and <strong>EPM (Estimated Plus-Minus)</strong>, advanced analytics can answer one question: how many wins does a single player really add — stripped of teammate luck, opponent strength, and random noise.</p>
+                    <p>Using five seasons of play-by-play data and <strong>EPM (Estimated Plus-Minus)</strong>, you can estimate how many wins a single player adds — after accounting for teammates, opponents, and randomness.</p>
 
-                    <h4>1. How to Scrape the Data</h4>
+                    <h4>1. Where the Data Comes From</h4>
                     <p><strong>Data sources:</strong></p>
                     <ul>
                         <li><a href="https://www.nba.com/stats/" target="_blank" rel="noopener">NBA.com Stats API</a> — official play-by-play, box scores, tracking data</li>
@@ -612,31 +610,31 @@
                     </ul>
                     <p><strong>Scraping tools:</strong> Python + <a href="https://pypi.org/project/requests/" target="_blank" rel="noopener">requests</a> / <a href="https://www.python-httpx.org/" target="_blank" rel="noopener">httpx</a> · <a href="https://www.crummy.com/software/BeautifulSoup/" target="_blank" rel="noopener">BeautifulSoup</a> / <a href="https://lxml.de/" target="_blank" rel="noopener">lxml</a> · <a href="https://www.selenium.dev/" target="_blank" rel="noopener">Selenium</a> / <a href="https://playwright.dev/" target="_blank" rel="noopener">Playwright</a> · <a href="https://github.com/swar/nba_api" target="_blank" rel="noopener">nba_api</a> library</p>
 
-                    <h4>2. How to Clean the Data</h4>
-                    <p><strong>Manual (understand first):</strong> Excel / Google Sheets for single-season inspection · Hand-label player name mappings · VLOOKUP joins to validate logic before coding.</p>
-                    <p><strong>Automated (scale up):</strong> <a href="https://pandas.pydata.org/" target="_blank" rel="noopener">Pandas</a> (<code>.merge()</code>, <code>.dropna()</code>, <code>.groupby()</code>) · <a href="https://duckdb.org/" target="_blank" rel="noopener">DuckDB</a> / SQL for RAM-heavy datasets · <a href="https://openrefine.org/" target="_blank" rel="noopener">OpenRefine</a> for name normalization.</p>
+                    <h4>2. Cleaning the Data</h4>
+                    <p><strong>Manual (to get a feel for it):</strong> Excel / Google Sheets — paste a season, sort by minutes played, drop garbage-time rows. Hand-check player name mappings across sources. Use VLOOKUP to test joins before writing code.</p>
+                    <p><strong>Automated (for scale):</strong> <a href="https://pandas.pydata.org/" target="_blank" rel="noopener">Pandas</a> (<code>.merge()</code>, <code>.dropna()</code>, <code>.groupby()</code>) · <a href="https://duckdb.org/" target="_blank" rel="noopener">DuckDB</a> / SQL when the data outgrows RAM · <a href="https://openrefine.org/" target="_blank" rel="noopener">OpenRefine</a> for fuzzy name matching.</p>
 
-                    <h4>3. Modeling &amp; Algorithms</h4>
+                    <h4>3. The Models</h4>
 
                     <p><strong>SPM — Statistics Plus-Minus</strong></p>
                     <div class="highlight-box">
-                        <p>Raw plus-minus fluctuates wildly year to year. Adding box-score statistics into the regression makes SPM far more stable. The most recent season carries weight ×0.50, second-to-last ×0.33, and three years ago ×0.17. Rookies default to SPM = −2.16.</p>
-                        <p>The 2007-08 Celtics were projected to win 67.5 games via SPM alone; they won 66. Average error across all teams: 4.5 wins — beating the Pythagorean formula. (<a href="https://www.basketball-reference.com/blog/index48d3.html?p=1351" target="_blank" rel="noopener">Source</a>)</p>
+                        <p>Raw plus-minus jumps around too much year to year. Adding box-score stats (points, rebounds, assists, etc.) into a regression makes it more stable. The most recent season gets weight 0.50, the year before 0.33, three years ago 0.17. Rookies start at −2.16.</p>
+                        <p>Example: the 2007-08 Celtics were projected at 67.5 wins by SPM before they'd played a game together. They won 66. The average error across all teams was 4.5 wins — better than the Pythagorean formula. (<a href="https://www.basketball-reference.com/blog/index48d3.html?p=1351" target="_blank" rel="noopener">Source</a>)</p>
                     </div>
 
                     <p><strong>APM — Adjusted Plus-Minus</strong></p>
-                    <p>A regression model where each 10-man lineup segment is one row, and every player is a variable. It asks: "holding the other nine players constant, how many points per 100 possessions does this player add?" The fatal flaw is overfitting — small-sample performances can produce extreme ratings.</p>
+                    <p>A regression where each 10-man lineup stint is a row, and each player is a variable. It answers: "holding the other nine guys constant, how many points per 100 possessions does this player add?" The problem is overfitting — a rookie who plays five good games can get a superstar rating because the model can't tell luck from skill.</p>
 
                     <p><strong>RAPM — Regularized Adjusted Plus-Minus</strong></p>
-                    <p>Ridge regression (L2 regularization) pulls extreme values back unless the evidence is overwhelming. Cross-validation chooses λ — the penalty strength. Multi-year RAPM stacks seasons with exponential decay weighting for 5,000+ possessions of data per player. (<a href="https://cdn.prod.website-files.com/5f1af76ed86d6771ad48324b/65569855ac58151a326abbcd_SSAC10%20-%20Basketball_Sill.pdf" target="_blank" rel="noopener">Sill's original paper</a>)</p>
+                    <p>Same idea, but with ridge regression (L2 penalty). Extreme values get pulled back toward zero unless the data is overwhelming. Cross-validation picks λ, the penalty strength. Stack multiple seasons with older games weighted less, and you get 5,000+ possessions per player instead of 1,000. (<a href="https://cdn.prod.website-files.com/5f1af76ed86d6771ad48324b/65569855ac58151a326abbcd_SSAC10%20-%20Basketball_Sill.pdf" target="_blank" rel="noopener">Sill's original paper</a>)</p>
 
                     <p><strong>EPM — Estimated Plus-Minus</strong></p>
-                    <p>The synthesis: SPM provides a stable box-score prior; RAPM adjusts it with on/off-court evidence. This Bayesian framework produces the most robust single-number public metric. Estimated Wins are then computed by aggregating each player's EPM across minutes, converting point differential to win probability via the Pythagorean formula.</p>
+                    <p>EPM combines both approaches: SPM gives a stable baseline (what the box score says), and RAPM adjusts it with what actually happened when the player was on the floor. It's a Bayesian setup — start with a prior, update with evidence. To turn EPM into Estimated Wins: add up each player's EPM × minutes, convert the point differential to a win probability (Pythagorean formula), and scale to 82 games. A +5.0 EPM player logging 2,500 minutes is worth roughly 8–10 wins above replacement.</p>
 
                     <p><strong>Estimated Skills &amp; DARKO (Kalman Filter)</strong></p>
-                    <p>If a player shoots 60% from three over 10 games, is that real? Estimated Skills applies a Kalman filter — the same algorithm used in rocket navigation — to every skill dimension. <a href="https://apanalytics.shinyapps.io/DARKO/" target="_blank" rel="noopener">DARKO</a> adds exponential decay weighting, age curves, rest-advantage, and opponent strength. It predicts forward: "what will this player do tomorrow?"</p>
+                    <p>When a guy shoots 60% from three over 10 games, is he actually better or just on a heater? Estimated Skills runs a Kalman filter — same math as rocket guidance — on each skill (shooting, finishing, playmaking, etc.). The filter keeps a running "true talent" estimate that moves a little with each game but doesn't overreact. <a href="https://apanalytics.shinyapps.io/DARKO/" target="_blank" rel="noopener">DARKO</a> layers in exponential decay (recent games count more), age curves, rest effects, and opponent strength. It looks forward, not backward.</p>
 
-                    <h4>4. The Full Pipeline</h4>
+                    <h4>4. End-to-End</h4>
                     <div class="pipeline-row">
                         <div class="pipeline-step">
                             <div class="step-name">Scrape</div>
@@ -668,36 +666,36 @@
 
                     <p>Research project supervised by <a href="https://physics.mit.edu/faculty/gunther-roland/" target="_blank" rel="noopener">MIT Professor Gunther Roland</a> · Jul–Oct 2024.</p>
 
-                    <h4>1. Motivation</h4>
-                    <p>Cosmic muons are produced when high-energy cosmic rays hit the upper atmosphere. Atmospheric pressure acts as a shield — higher pressure means more air, so more muons decay before reaching detectors. Quantifying this relationship lets us correct for weather effects and sharpen sensitivity to rare cosmic events like high-energy particle bursts.</p>
+                    <h4>1. Why This Matters</h4>
+                    <p>Cosmic muons are particles created when high-energy cosmic rays smash into the upper atmosphere. They rain down constantly — about one per square centimeter per minute at sea level. Atmospheric pressure works like a shield: more pressure means denser air, which means more muons decay before they reach the ground. If you can measure this relationship, you can subtract out the weather and get better at catching rare cosmic events.</p>
 
-                    <h4>2. What I Did</h4>
+                    <h4>2. What I Actually Did</h4>
 
-                    <p><strong>Task 1 — Atmospheric Pressure vs. Time-Stamp.</strong> Used <a href="https://matplotlib.org/" target="_blank" rel="noopener">Matplotlib</a> + <a href="https://pandas.pydata.org/" target="_blank" rel="noopener">Pandas</a> to generate pressure-over-time plots for each data group. Manually classified each plot — identifying sensor drift, diurnal cycles, and anomalous spikes. Building intuition for "normal" detector behavior made automated classification possible later.</p>
+                    <p><strong>Task 1 — Pressure vs. time plots.</strong> Used <a href="https://matplotlib.org/" target="_blank" rel="noopener">Matplotlib</a> and <a href="https://pandas.pydata.org/" target="_blank" rel="noopener">Pandas</a> to generate pressure-over-time charts for each data group (tens of thousands of timestamped readings per group). Then I manually sorted the plots — looking for sensor drift, day-night cycles, and anything that didn't belong. Doing it by hand was slow, but it taught me what "normal" looks like, which made it much easier to spot real anomalies later.</p>
 
-                    <p><strong>Task 2 — Diurnal Pressure Visualization.</strong> Built a 24-hour heatmap in Python showing how atmospheric pressure varies across hours of the day. Revealed a clear diurnal pattern: muon rates were lower during midday (warmer, less dense air) and higher at night (cooler, denser air). Quantifying this cycle let us subtract it out and isolate pressure-driven effects.</p>
+                    <p><strong>Task 2 — 24-hour heatmap.</strong> Built a heatmap in Python showing how pressure changes hour by hour across several weeks. A clear pattern showed up: muon counts were lower around midday (warmer, less dense air) and higher at night (cooler, denser air). Once we could quantify that cycle, we could remove it and focus on the pressure effects we actually cared about.</p>
 
-                    <p><strong>Task 3 — Coincident Event Rate Calculation.</strong> Cosmic Watch uses two scintillator panels — a true muon event requires both to trigger within a narrow time window. In Excel, calculated coincident event rates and false-coincidence backgrounds. Fed into time-difference calibration to correct a systematic offset, improving sensitivity to rare events.</p>
+                    <p><strong>Task 3 — Coincidence rates.</strong> The detector uses two scintillator panels. A real muon event is when both panels fire within a tight time window. In Excel, I calculated the coincidence rate and the false-coincidence background. This fed directly into the timing calibration — analyzing the distribution of time gaps between the two panels turned up a systematic offset that, once fixed, made the detector more sensitive to rare events.</p>
 
-                    <p><strong>Task 4 — Team Synthesis &amp; Final Figures.</strong> Consolidated all key visualizations into a unified presentation with consistent styling and explanatory captions.</p>
+                    <p><strong>Task 4 — Pulling it together.</strong> I gathered all the team's visualizations — pressure trends, heatmaps, timing distributions, muon-rate vs. pressure scatter plots — into one presentation, with consistent labels and captions so anyone could follow the logic.</p>
 
-                    <h4>3. Results</h4>
+                    <h4>3. What We Found</h4>
                     <div class="result-grid">
                         <div class="result-card">
                             <strong>Pressure vs. Muon Rate (Anti-Correlation)</strong>
-                            <p>Higher pressure = denser air = more muons decay before reaching ground level. Confirms theoretical expectation. Enables weather-artifact correction in real-time monitoring.</p>
+                            <p>Higher pressure → fewer muons detected. Matches what theory predicts: denser air means more muons decay before reaching the ground. This lets us correct for weather when monitoring for real cosmic events.</p>
                         </div>
                         <div class="result-card">
                             <strong>Improved Timing Calibration</strong>
-                            <p>Refined time-difference calibration eliminates systematic offset, enhancing sensitivity to rare cosmic phenomena including high-energy particle bursts.</p>
+                            <p>Fixing a systematic offset in the coincidence timing made the detector more sensitive to genuine rare events — high-energy particle bursts and potentially stuff beyond the Standard Model.</p>
                         </div>
                     </div>
 
-                    <h4>4. Challenges &amp; Lessons</h4>
+                    <h4>4. What I Learned</h4>
                     <div class="challenge-block">
-                        <p><strong>The noise problem.</strong> Raw detector data is noisy — electrical interference, temperature drift, random coincidences all mimic real muons. Distinguishing signal from noise required iterative filtering: threshold cut → statistical test → visualize → refine. Data cleaning is a loop, not a one-pass operation.</p>
-                        <p><strong>Manual classification as a forcing function.</strong> Classifying hundreds of plots by hand felt tedious, but forced deep understanding of the data's texture — drift patterns, diurnal cycles, the difference between a pressure anomaly and a loose cable.</p>
-                        <p><strong>Connection to NBA Analysis.</strong> Both projects boil down to <em>separating signal from noise</em>. Atmospheric pressure confounds muon detection just like teammate quality confounds raw plus-minus. Ridge regression in RAPM is conceptually identical to the regularization applied to time-difference distributions. Different domains, same logic: control for what you can measure, regularize against what you cannot.</p>
+                        <p><strong>Noise is the real problem.</strong> Raw detector data has electrical interference, temperature drift, and random coincidences all pretending to be muons. Pulling signal out of that took rounds of threshold cuts, statistical tests, and visual checks. Data cleaning isn't a one-and-done thing — it's a loop.</p>
+                        <p><strong>Manual work isn't wasted time.</strong> Sorting through hundreds of plots by hand felt tedious, but it forced me to learn how the data actually behaves — drift patterns, the shape of a diurnal cycle, the difference between a real pressure spike and a loose cable. That intuition made the automated stuff possible.</p>
+                        <p><strong>Same math, different problem.</strong> The ridge regression that stabilizes RAPM? Same idea as the regularization we applied to the timing distributions. In one case the confounder is teammate quality, in the other it's atmospheric pressure. Both problems boil down to: control what you can measure, regularize what you can't.</p>
                     </div>
                 </div>
             </div>
