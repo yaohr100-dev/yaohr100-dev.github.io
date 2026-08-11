@@ -378,6 +378,28 @@
             .contact-grid { grid-template-columns: 1fr; }
         }
 
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg:        #111111;
+                --surface:   #1a1a1a;
+                --text:      #e5e5e5;
+                --muted:     #999;
+                --faint:     #777;
+                --border:    #2a2a2a;
+                --shadow:    0 1px 3px rgba(0,0,0,0.3);
+            }
+            .skill-tag:hover { background: #1a1a3a; }
+            .project-tags span { background: #1a1a3a; }
+            .disclosure-btn:hover { background: #1a1a2a; }
+            .disclosure.open .disclosure-btn { background: #1a1a2a; }
+            .highlight-box { background: #1a1a2a; }
+            .pipeline-step { background: #1a1a2a; }
+            .result-card { background: #1a1a2a; }
+            .challenge-block { background: #1a1a1a; }
+            .info-icon { background: #1a1a3a; }
+            code { background: #2a2a2a; }
+        }
+
         /* ===== Inline code ===== */
         code {
             background: #f0f0ed; padding: 1px 6px;
@@ -775,6 +797,10 @@
                     <span class="c-icon">&#8599;</span>
                     <div><strong>GitHub</strong><span>yaohr100-dev</span></div>
                 </a>
+                <a href="/cv.pdf" class="contact-card">
+                    <span class="c-icon">&#8599;</span>
+                    <div><strong>CV / Resume</strong><span>Download PDF</span></div>
+                </a>
             </div>
         </section>
 
@@ -790,6 +816,20 @@
          SCRIPTS
          ================================================================ -->
     <script>
+        // ===== Smooth scroll offset for sticky nav =====
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const id = link.getAttribute('href');
+                const target = document.querySelector(id);
+                if (target) {
+                    e.preventDefault();
+                    const navH = document.querySelector('nav').offsetHeight;
+                    const top = target.getBoundingClientRect().top + window.scrollY - navH - 16;
+                    window.scrollTo({ top, behavior: 'smooth' });
+                }
+            });
+        });
+
         // ===== Progressive Disclosure =====
         function toggleDisclosure(id) {
             const el = document.getElementById(id);
