@@ -1408,6 +1408,7 @@
             let score = 0;
             let interval;
             let animationId = null;
+            let gameOver = false;
             let lastStepTime = 0;
             const STEP_MS = 100;
 
@@ -1461,6 +1462,7 @@
             }
 
             function gameLoop(timestamp) {
+                if (gameOver) return;
                 if (timestamp - lastStepTime >= STEP_MS) {
                     lastStepTime = timestamp;
 
@@ -1482,6 +1484,7 @@
                     // self collision
                     for (const s of snake) {
                         if (s.x === head.x && s.y === head.y) {
+                            gameOver = true;
                             // game over overlay
                             ctx.fillStyle = 'rgba(255,107,157,0.5)';
                             ctx.fillRect(0, 0, canvas.width, canvas.height);
