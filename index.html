@@ -1400,9 +1400,13 @@
         function startSnake() {
             snakeActive = true;
             const canvas = document.createElement('canvas');
-            canvas.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10000;border:2px solid var(--accent3);border-radius:8px;background:rgba(15,14,26,0.95);cursor:crosshair;';
+            canvas.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10000;border:2px solid var(--accent3);border-radius:10px;background:rgba(15,14,26,0.95);cursor:none;pointer-events:auto;';
             canvas.width = 400;
             canvas.height = 400;
+            // Prevent canvas clicks from propagating to the page
+            canvas.addEventListener('click', (e) => e.stopPropagation());
+            canvas.addEventListener('mousedown', (e) => e.stopPropagation());
+            canvas.addEventListener('mouseup', (e) => e.stopPropagation());
             document.body.appendChild(canvas);
             const ctx = canvas.getContext('2d');
 
@@ -1540,13 +1544,17 @@
                     cleanup();
                     return;
                 }
-                const key = e.key;
+                const KEY = {
+                    UP: (key === 'ArrowUp' || key === 'w' || key === 'W'),
+                    DOWN: (key === 'ArrowDown' || key === 's' || key === 'S'),
+                    LEFT: (key === 'ArrowLeft' || key === 'a' || key === 'A'),
+                    RIGHT: (key === 'ArrowRight' || key === 'd' || key === 'D'),
+                };
                 // Set pending direction — validation happens in gameLoop to prevent 180° reversal
-                const none = {dx:0, dy:0};
-                if ((key === 'ArrowUp' || key === 'w') && dy !== 1)    { pendingDx = 0;  pendingDy = -1; e.preventDefault(); }
-                if ((key === 'ArrowDown' || key === 's') && dy !== -1)  { pendingDx = 0;  pendingDy = 1;  e.preventDefault(); }
-                if ((key === 'ArrowLeft' || key === 'a') && dx !== 1)   { pendingDx = -1; pendingDy = 0;  e.preventDefault(); }
-                if ((key === 'ArrowRight' || key === 'd') && dx !== -1) { pendingDx = 1;  pendingDy = 0;  e.preventDefault(); }
+                if (KEY.UP && dy !== 1)    { pendingDx = 0;  pendingDy = -1; e.preventDefault(); }
+                if (KEY.DOWN && dy !== -1)  { pendingDx = 0;  pendingDy = 1;  e.preventDefault(); }
+                if (KEY.LEFT && dx !== 1)   { pendingDx = -1; pendingDy = 0;  e.preventDefault(); }
+                if (KEY.RIGHT && dx !== -1) { pendingDx = 1;  pendingDy = 0;  e.preventDefault(); }
             }
 
             function cleanup() {
