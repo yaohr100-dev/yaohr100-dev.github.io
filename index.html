@@ -1483,7 +1483,9 @@
 
             function gameLoop(timestamp) {
                 if (gameOver) return;
-                if (timestamp - lastStepTime >= STEP_MS) {
+                // Apply speed increase: step interval decreases as score grows
+                const speed = Math.max(60, STEP_MS - Math.floor(score / 5) * 8);
+                if (timestamp - lastStepTime >= speed) {
                     lastStepTime = timestamp;
 
                     // apply pending direction (validated to prevent 180° reversal)
