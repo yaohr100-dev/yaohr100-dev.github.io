@@ -400,6 +400,18 @@
             code { background: #f0f0ed; }
         }
 
+        /* ===== Print styles for PDF export ===== */
+        @media print {
+            @page { margin: 1cm; size: A4; }
+            nav, .hero-links, .c-icon, .disclosure-btn, footer, .contact-grid, #contact, script { display: none !important; }
+            .disclosure-body { display: block !important; }
+            body { font-size: 10pt; color: #000; background: #fff; }
+            h2 { font-size: 14pt; }
+            h3 { font-size: 12pt; }
+            .main { max-width: 100%; }
+            section { padding: 12pt 0; break-inside: avoid; }
+        }
+
         /* ===== Inline code ===== */
         code {
             background: #f0f0ed; padding: 1px 6px;
@@ -797,9 +809,9 @@
                     <span class="c-icon">&#8599;</span>
                     <div><strong>GitHub</strong><span>yaohr100-dev</span></div>
                 </a>
-                <a href="/cv.pdf" class="contact-card">
+                <a href="#" class="contact-card" onclick="generatePDF(); return false;">
                     <span class="c-icon">&#8599;</span>
-                    <div><strong>CV / Resume</strong><span>Download PDF</span></div>
+                    <div><strong>Download CV</strong><span>Save page as PDF</span></div>
                 </a>
             </div>
         </section>
@@ -845,7 +857,16 @@
             }
         }
 
-        // ===== Snake Game — type "snake" to start =====
+        // ===== PDF Download =====
+        function generatePDF() {
+            // Open all disclosure panels so content isn't hidden
+            document.querySelectorAll('.disclosure').forEach(d => d.classList.add('open'));
+            window.print();
+            // Close them back after a beat
+            setTimeout(() => {
+                document.querySelectorAll('.disclosure').forEach(d => d.classList.remove('open'));
+            }, 500);
+        }
         let snakeBuffer = '';
         let snakeActive = false;
         const SNAKE_WORD = 'snake';
