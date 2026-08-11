@@ -146,6 +146,18 @@
             border-radius: var(--radius); padding: 16px 20px;
             box-shadow: var(--shadow);
         }
+        .info-row, .award-item {
+            display: flex; align-items: flex-start; gap: 12px;
+            padding: 9px 0;
+        }
+        .info-row + .info-row, .award-item + .award-item { border-top: 1px solid var(--border); }
+        .award-year {
+            width: 56px; flex-shrink: 0;
+            font-size: 0.78rem; font-weight: 600;
+            color: var(--faint); padding-top: 1px;
+        }
+        .award-item strong { display: block; font-size: 0.88rem; color: var(--text); font-weight: 600; }
+        .award-item span  { color: var(--muted); font-size: 0.8rem; }
         .info-row {
             display: flex; align-items: flex-start; gap: 12px;
             padding: 9px 0;
@@ -390,6 +402,7 @@
                 <li><a href="#about">About</a></li>
                 <li><a href="#skills">Skills</a></li>
                 <li><a href="#projects">Projects</a></li>
+                <li><a href="#awards">Awards</a></li>
                 <li><a href="#deep-dives">Deep Dives</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
@@ -515,6 +528,50 @@
                 <div class="skill-tags">
                     <span class="skill-tag">Mandarin (Native)</span>
                     <span class="skill-tag">English (Fluent)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             AWARDS
+             ============================================================ -->
+        <section id="awards">
+            <h2 class="section-title"><small>Awards</small>Honors &amp; Recognition</h2>
+            <div class="awards-list">
+                <div class="award-item">
+                    <span class="award-year">2025</span>
+                    <div>
+                        <strong>Euclid Mathematics Contest</strong>
+                        <span>Distinction Award</span>
+                    </div>
+                </div>
+                <div class="award-item">
+                    <span class="award-year">2024</span>
+                    <div>
+                        <strong>Tencent Sports</strong>
+                        <span>Top 100 Most Liked-Creator</span>
+                    </div>
+                </div>
+                <div class="award-item">
+                    <span class="award-year">2023–25</span>
+                    <div>
+                        <strong>Conduct and Etiquette Excellence</strong>
+                        <span>Award</span>
+                    </div>
+                </div>
+                <div class="award-item">
+                    <span class="award-year">2023</span>
+                    <div>
+                        <strong>Senior Mathematical Challenge</strong>
+                        <span>Gold Award</span>
+                    </div>
+                </div>
+                <div class="award-item">
+                    <span class="award-year">2023</span>
+                    <div>
+                        <strong>Military Training</strong>
+                        <span>Outstanding Student Award</span>
+                    </div>
                 </div>
             </div>
         </section>
